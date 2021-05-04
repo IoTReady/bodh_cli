@@ -2,7 +2,8 @@
 
 ## Features
 
-- [x] Registers devices with Bodh
-- [x] Simulates test event
-- [ ] Registers devices with AWS IoT
-- [ ] Generates AWS IoT certificates
+- [x] Register devices with Bodh
+- [x] Register devices with AWS IoT
+- [x] Generate AWS IoT certificates
+- [x] Send simulated test event via HTTP
+- [ ] Send simulated test event via AWS IoT
