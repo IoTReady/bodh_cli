@@ -1,5 +1,6 @@
 import click
 import http.client
+import requests
 import json
 import os
 from config_path import ConfigPath
@@ -50,6 +51,7 @@ def save(host, port, secure, apikey):
               help='ID of device to register')
 def register(host, port, secure, apikey, deviceid):
     """Register a device using the apikey."""
+    # TODO: migrate to requests
     api_endpoint = "/api/devices"
     if secure:
         conn = http.client.HTTPSConnection(host, port)
@@ -68,8 +70,24 @@ def register(host, port, secure, apikey, deviceid):
     conn.request("POST", api_endpoint, payload, headers)
     res = conn.getresponse()
     data = res.read()
-    click.echo(data.decode("utf-8"))
+    data = json.loads(data.decode("utf-8"))
 
+    for key, url in data.items():
+        download_file(url)
+
+    click.echo("All done!")
+
+def download_file(url):
+    r = requests.get(url, allow_redirects=True)
+    file_name = get_file_name(url)
+    print("Downloading", file_name)
+    with open(file_name, 'wb') as f:
+        f.write(r.content)
+        
+
+def get_file_name(url):
+    return url.split('?')[0].split('/')[-1]
+    
 
 @cli.command()
 @click.option('--host', default=config.get('host') or default_host, help='Bodh host (for self-hosted).')
@@ -80,6 +98,7 @@ def register(host, port, secure, apikey, deviceid):
               help='ID of device for which to send a test event.')
 def sendevent(host, port, secure, apikey, deviceid):
     """Sends a test event using the apikey."""
+    # TODO: migrate to requests
     api_endpoint = "/api/events"
     if secure:
         conn = http.client.HTTPSConnection(host, port)

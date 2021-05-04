@@ -132,3 +132,7 @@ dmypy.json
 *.build
 *.dist
 *.bin
+
+# certs
+*.pem
+*.key
