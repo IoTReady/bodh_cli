@@ -23,8 +23,8 @@ def cli():
 def configure(host, apikey):
     """Save host and apikey in the user's config directory."""
     config = {
-        "api_key": apikey,
-        "host": host,
+        "api_key": apikey.strip(),
+        "host": host.strip(),
     }
     with open(file_path, "w") as f:
         json.dump(config, f)
