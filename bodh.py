@@ -100,20 +100,6 @@ def simulate(deviceid, interval):
     host, api_key = read_saved_config()
 
     url = host + "/api/events"
-    payload = {
-        "event": {
-            "device_id": deviceid,
-            "data": {
-                "current1": round(uniform(100, 600),2),
-                "current2": round(uniform(100, 600),2),
-                "current3": round(uniform(100, 600),2),
-                "voltage1": round(uniform(23500, 24500),2),
-                "voltage2": round(uniform(23500, 24500),2),
-                "voltage3": round(uniform(23500, 24500),2),
-                "temperature": round(uniform(70, 95),2),
-            }
-        }
-    }
     headers = {
         'Accept': 'application/json',
         'x-api-key': api_key,
@@ -121,6 +107,20 @@ def simulate(deviceid, interval):
     }
     
     for i in range(0, MAX):
+        payload = {
+            "event": {
+                "device_id": deviceid,
+                "data": {
+                    "current1": round(uniform(100, 600),2),
+                    "current2": round(uniform(100, 600),2),
+                    "current3": round(uniform(100, 600),2),
+                    "voltage1": round(uniform(23500, 24500),2),
+                    "voltage2": round(uniform(23500, 24500),2),
+                    "voltage3": round(uniform(23500, 24500),2),
+                    "temperature": round(uniform(70, 95),2),
+                }
+            }
+        }
         res = requests.post(url, data=json.dumps(payload), headers=headers)
         data = res.json()
         click.echo(data)
