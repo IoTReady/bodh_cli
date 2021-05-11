@@ -4,6 +4,7 @@ import json
 from os import path, makedirs
 from time import sleep
 from config_path import ConfigPath
+from random import uniform
 
 default_host = "https://bodh.iotready.co"
 
@@ -103,9 +104,13 @@ def simulate(deviceid, interval):
         "event": {
             "device_id": deviceid,
             "data": {
-                "metric1": 100,
-                "metric2": 0.005,
-                "metric3": "dry"
+                "current1": round(uniform(100, 600),2),
+                "current2": round(uniform(100, 600),2),
+                "current3": round(uniform(100, 600),2),
+                "voltage1": round(uniform(23500, 24500),2),
+                "voltage2": round(uniform(23500, 24500),2),
+                "voltage3": round(uniform(23500, 24500),2),
+                "temperature": round(uniform(70, 95),2),
             }
         }
     }
