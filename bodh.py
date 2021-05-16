@@ -143,9 +143,23 @@ def bulkimport(devicelist, creatething):
         'Content-Type': 'application/json'
     }
 
+    skip = False
+    try:
+        with open('last_synced.txt', 'r') as f:
+            last_device_id = f.read()
+            if last_device_id:
+                skip = True
+    except:
+        pass
+    
+
     with open(devicelist, 'r') as f:
         reader = csv.DictReader(f)
         for row in reader:
+            if row['id'] == last_device_id:
+                skip = False
+            if skip:
+                continue
             payload = {
                 "device": {
                     "id": row['id']
@@ -161,6 +175,8 @@ def bulkimport(devicelist, creatething):
                 click.echo("Use the saved certifcates to connect device with ID {} to AWS IoT!".format(deviceid))
             else:
                 click.echo(data)
+            with open('last_synced.txt', 'w') as f:
+                f.write(row['id'])
 
 if __name__ == '__main__':
     cli()
