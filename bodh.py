@@ -1,6 +1,7 @@
 import click
 import requests
 import json
+import csv
 from os import path, makedirs
 from time import sleep
 from config_path import ConfigPath
@@ -125,6 +126,41 @@ def simulate(deviceid, interval):
         data = res.json()
         click.echo(data)
         sleep(interval)
+
+@cli.command()
+@click.option('--devicelist', prompt='Device List', help='CSV file containing list of devices to import. See template.csv for format.')
+@click.option('--creatething', default=False, type=bool, prompt='Create AWS IoT Thing', help='Should we create these things on AWS IoT?')
+def bulkimport(devicelist, creatething):
+    """Register devices imported from a CSV file."""
+
+    host, api_key = read_saved_config()
+
+    url = host + "/api/devices"
+    
+    headers = {
+        'Accept': 'application/json',
+        'x-api-key': api_key,
+        'Content-Type': 'application/json'
+    }
+
+    with open(devicelist, 'r') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            payload = {
+                "device": {
+                    "id": row['id']
+                }
+            }
+            res = requests.post(url, data = json.dumps(payload), headers = headers)
+            data = res.json()
+            if creatething:
+                base_path = "certs/{}".format(deviceid)
+                mkdir(base_path)
+                for key, url in data.items():
+                    download_file(url, base_path)
+                click.echo("Use the saved certifcates to connect device with ID {} to AWS IoT!".format(deviceid))
+            else:
+                click.echo(data)
 
 if __name__ == '__main__':
     cli()

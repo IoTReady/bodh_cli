@@ -136,3 +136,6 @@ dmypy.json
 # certs
 *.pem
 *.key
+
+# devicelist
+.csv
