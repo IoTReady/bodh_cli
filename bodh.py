@@ -150,6 +150,7 @@ def bulkimport(devicelist, creatething):
             if last_device_id:
                 skip = True
     except:
+        last_device_id = ''
         pass
     
 
