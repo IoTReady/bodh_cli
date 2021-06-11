@@ -89,14 +89,14 @@ def mkdir(path):
 
 @cli.command()
 @click.option('--deviceid', prompt='Device ID', help='ID of device for which to send a test event.')
-@click.option('--interval', prompt='Interval', default=10, type=int, help='Interval between test events (min = 5s).')
-def simulate(deviceid, interval):
-    """Sends `MAX` test events using the apikey."""
-    MAX = 10
+@click.option('--interval', prompt='Interval', default=5, type=int, help='Interval between test events (min = 5s).')
+@click.option('--maxcount', prompt='Max Count', default=10, type=int, help='Max events to send.')
+def simulate(deviceid, interval, maxcount):
+    """Sends `maxcount` test events using the apikey."""
 
-    if interval < 5:
-        interval = 5
-        print("Using min interval of 5s")
+    # if interval < 5:
+    #     interval = 5
+    #     print("Using min interval of 5s")
 
     host, api_key = read_saved_config()
 
@@ -107,7 +107,7 @@ def simulate(deviceid, interval):
         'Content-Type': 'application/json'
     }
     
-    for i in range(0, MAX):
+    for i in range(0, maxcount):
         payload = {
             "event": {
                 "device_id": deviceid,
